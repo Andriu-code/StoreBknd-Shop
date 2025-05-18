@@ -12,7 +12,7 @@ module.exports.Database = (collection) => new Promise(async (resolve, reject) =>
             debug('Nueva conexion realizada con MongoDB Atlas')
         }
         debug('Reutilizando conexion')  // si existe conexion, se reutiliza la que ya existe
-        const db = connection.db(Config.mondoDbname);
+        const db = connection.db(Config.mongoDbname);
         resolve(db.collection(collection))
     } catch (error) {
         reject(error)
