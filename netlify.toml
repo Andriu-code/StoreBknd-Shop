@@ -1,2 +1,6 @@
 [build]
-    functions = "functions"
+  functions = "src/functions"
+  command = "npm install"
+
+[dev]
+  functions = "src/functions"

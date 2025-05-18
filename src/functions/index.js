@@ -1,33 +1,35 @@
-import serverless from "serverless-http";
 const express = require('express');
-const createError = require('http-errors');
+const debug = require('debug')('app:main');
+const cors = require('cors');
+const serverless = require("serverless-http");
 
-const { Response } = require('../common/response');
+const { Config } = require('../config/index');
 
-module.exports.IndexAPI = (app) => {
-    const router = express.Router();
+const { ProductsAPI } = require('../products/index')
+const { UsersAPI } = require('../users/index')
+const { CategoriesAPI } = require('../categories/index')
+const { OrdersAPI } = require('../orders/index')
+const { PaymentsAPI } = require('../payments/index')
+const { IndexAPI, NotFoundAPI } = require('../index/index')
 
-    router.get("/", (req, res) => {
-        const menu = {
-            products: `https://${req.headers.host}/api/products`,
-            users: `https://${req.headers.host}/api/users`,
-            categories: `https://${req.headers.host}/api/categories`,
-            orders: `https://${req.headers.host}/api/orders`,
-        };
+const app = express();
+app.use(cors());
 
-        Response.success(res, 200, "API Store", menu)
-    });
+app.use(express.json());
 
-    app.use("/.netlify/functions/index", router)
-};
+IndexAPI(app);
+ProductsAPI(app);
+UsersAPI(app);
+CategoriesAPI(app);
+OrdersAPI(app);
+PaymentsAPI(app)
+NotFoundAPI(app);
 
-module.exports.NotFoundAPI = (app) => {
-    const router = express.Router();
+//modulos
+module.exports.handler = serverless(app, {
+    basePath: "/.netlify/functions/index"
+});
 
-    router.all("*", (req, res) => {
-        Response.error(res, new createError.NotFound());
-    })
-
-    app.use("/.netlify/functions/index", router)
-}
-export const handler = serverless(app)
+/*app.listen(Config.port, () => {
+    debug(`Servidor escuchando en el puerto ${Config.port}`)
+});*/

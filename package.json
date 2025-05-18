@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "set DEBUG=app:* & nodemon index.js",
     "build": "netlify deploy --prod",
-    "start": "node functions/index.js"
+    "start": "node src/functions/index.js"
   },
   "keywords": [],
   "author": "",
